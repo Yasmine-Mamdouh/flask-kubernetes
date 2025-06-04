@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "yasminemamdouh/iti-flask-task"
         IMAGE_TAG = "v0.1"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
+        KUBECONFIG=/var/lib/jenkins/.kube/k3s.yaml
     }
 
     stages {
