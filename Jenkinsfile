@@ -42,6 +42,7 @@ pipeline {
                     withEnv(["KUBECONFIG=${KUBECONFIG_PATH}"]) {
                         sh "kubectl apply -f ${DEPLOYMENT_FILE}"
                     }
+                }
             }
         }
     }
