@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = "yasminemamdouh/iti-flask-task"
         IMAGE_TAG = "latest"
-        DOCKER_CREDENTIALS_ID = "dockerhub-creds"
         DEPLOYMENT_FILE = "k8s/deployment.yaml"
         KUBECONFIG_PATH = "/var/lib/jenkins/.kube/config"
     }
@@ -28,12 +27,19 @@ pipeline {
             steps {
                 echo "🚀 Pushing image to DockerHub..."
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker push $IMAGE_NAME:$IMAGE_TAG"
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh """
+                            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                            docker push $IMAGE_NAME:$IMAGE_TAG
+                        """
                     }
                 }
             }
-        }
+        } // ← دي كانت ناقصة
 
         stage('Deploy to K3s') {
             steps {
