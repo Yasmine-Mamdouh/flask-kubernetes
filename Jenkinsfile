@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         IMAGE_NAME = "yasminemamdouh/iti-flask-task"
-        IMAGE_TAG = "v0.1"
+        IMAGE_TAG = "latest"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
-        KUBECONFIG=/var/lib/jenkins/.kube/k3s.yaml
+        DEPLOYMENT_FILE = "k8s/deployment.yaml"
+        KUBECONFIG_PATH = "/var/lib/jenkins/.kube/config"
     }
 
     stages {
@@ -37,8 +38,10 @@ pipeline {
         stage('Deploy to K3s') {
             steps {
                 echo "🌐 Deploying to K3s..."
-                sh 'kubectl apply -f k8s/deployment.yaml'
-                sh 'kubectl apply -f k8s/service.yaml'
+                script {
+                    withEnv(["KUBECONFIG=${KUBECONFIG_PATH}"]) {
+                        sh "kubectl apply -f ${DEPLOYMENT_FILE}"
+                    }
             }
         }
     }
