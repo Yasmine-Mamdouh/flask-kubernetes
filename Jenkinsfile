@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo "📦 Cloning GitHub Repo..."
-                git branch: 'main', url: 'https://github.com/Yasmine-Mamdouh/flask-kubernetes.git'
+                git branch: 'main', url: 'https://github.com/Yasmine-Mamdouh/flask-kubernetes.git'
             }
         }
 
